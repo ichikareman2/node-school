@@ -11,9 +11,17 @@ var trr = through(function (buf) {
 	this.queue(buf.toString().toUpperString());
 });
 
+var loud = tr.select('.loud');
+var loudstream = loud.createStream();
+
+loudstream.pipe(trr).pipe(process.stdout);
+
+// loudstream.pipe(process.stdout);
+
+// tr.pipe(process.stdout);
 
 
-tr.pipe(process.stdout);
+
 // var str = tr.select('.loud');
 
 // str.pipe(trr).pipe(process.stdout);
