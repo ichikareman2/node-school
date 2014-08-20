@@ -1,16 +1,44 @@
 ////STREAM-ADVENTURE
-//-----LESSON10
-var trumpet = require('trumpet');
-var through = require('through');
-var tr = trumpet();
-process.stdin.pipe(tr);
-var trr = through(function (buf) {
-	this.queue(buf.toString().toUpperCase());
-});
-var loud = tr.select('.loud');
-var loudStream = loud.createStream();
-loudStream.pipe(trr).pipe(loudStream);
-tr.pipe(process.stdout);
+//-----LESSON12
+var duplexer = require('duplexer'), 
+through = require('through');
+var i = [];
+var tr = function(buf){
+	if(typeof i[buf['country']] == 'undefined')
+		i[buf['country']] = 0;
+	
+	i[buf['country']] += 1;
+};
+
+module.exports = function (counter) {
+	return duplexer(through(tr,function () {
+		counter.setCounts(i);
+		this.queue(null);
+	}),counter);
+};
+
+// //-----LESSON11
+// var spawn = require('child_process').spawn;
+// var duplexer = require('duplexer');
+
+// module.exports = function (cmd,args) {
+	
+	// var sp = spawn(cmd,args);
+	// return duplexer(sp.stdin,sp.stdout);
+// };
+
+// //-----LESSON10
+// var trumpet = require('trumpet');
+// var through = require('through');
+// var tr = trumpet();
+// process.stdin.pipe(tr);
+// var trr = through(function (buf) {
+	// this.queue(buf.toString().toUpperCase());
+// });
+// var loud = tr.select('.loud');
+// var loudStream = loud.createStream();
+// loudStream.pipe(trr).pipe(loudStream);
+// tr.pipe(process.stdout);
 
 // //-----LESSON09
 // var ws = require('websocket-stream');
@@ -268,7 +296,7 @@ tr.pipe(process.stdout);
 // });
 
 
-////-----LESSON 4
+// //-----LESSON 4
 // var fs = require('fs');
 // var a = fs.readFile(process.argv[2],function(err,data){
 	// if (err) throw err;
