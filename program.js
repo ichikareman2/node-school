@@ -1,45 +1,16 @@
 ////STREAM-ADVENTURE
 //-----LESSON10
-
 var trumpet = require('trumpet');
 var through = require('through');
-
 var tr = trumpet();
 process.stdin.pipe(tr);
-
 var trr = through(function (buf) {
-	this.queue(buf.toString().toUpperString());
+	this.queue(buf.toString().toUpperCase());
 });
-
 var loud = tr.select('.loud');
-var loudstream = loud.createStream();
-
-loudstream.pipe(trr).pipe(process.stdout);
-
-// loudstream.pipe(process.stdout);
-
-// tr.pipe(process.stdout);
-
-
-
-// var str = tr.select('.loud');
-
-// str.pipe(trr).pipe(process.stdout);
-
-
-// var str = tr.select('.loud');
-// var stream = str.createStream();
-// stream.pipe(trr).pipe(process.stdout);
-
-// str.pipe(trr).pipe(stream).pipe(process.stdout);
-//str.pipe(process.stdout);
-
-//.pipe(process.stdout);
-//console.log(str.toString().toUpperCase());
-// str.pipe
-
-
-
+var loudStream = loud.createStream();
+loudStream.pipe(trr).pipe(loudStream);
+tr.pipe(process.stdout);
 
 // //-----LESSON09
 // var ws = require('websocket-stream');
